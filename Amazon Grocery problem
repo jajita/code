@@ -1,0 +1,52 @@
+import java.util.*;
+public class MyClass {
+    public static void main(String args[]) {
+     //int[] nums = {7,4,5,2,6,5};
+     int[] nums = {1,1,2,1};
+     Stack<Integer> stack = new Stack<Integer>();
+     List<Integer> previousSmaller = new ArrayList<>();
+     for(int i = 0; i < nums.length; i++) {
+         previousSmaller.add(-1);
+     }
+     for (int i = nums.length-1; i>=0; i--) {
+         while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) {
+            
+            previousSmaller.set(stack.pop(), i);
+         } 
+         stack.push(i);
+         
+     }
+     System.out.println(previousSmaller);
+     int[] dp = new int[nums.length];
+     Arrays.fill(dp, 0);
+     dp[0] = nums[0];
+     for(int i= 1; i < nums.length; i++) {
+         if (nums[i] > nums[i-1]) {
+             dp[i] = dp[i-1] + nums[i];
+         } else {
+            int j =  previousSmaller.get(i);
+            int length;
+            if ( j >= 0) {
+                length = Math.min(nums[i], i-j);
+            } else {
+               length = nums[i];
+            }
+    
+            for(int k = 0; k < length && (i-k) >= 0; k++) {
+                dp[i] += (nums[i] - k);
+            }
+            if(j >= 0) {
+                 dp[i] += dp[j];
+            }
+           
+         }
+     }
+     
+     for(int num : dp) {
+              System.out.println(num);
+
+     }
+     
+     
+    }
+}
