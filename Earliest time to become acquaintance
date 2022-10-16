@@ -1,0 +1,66 @@
+class Solution {
+    class UnionFind {
+        int[] root;
+        int[] rank;
+        int count;
+        
+        UnionFind(int size) {
+            root = new int[size];
+            rank = new int[size];
+            
+            for (int i = 0 ; i < size; i++) {
+                root[i] = i;
+                rank[i] = 1;
+            }
+            count = size;
+        }
+        
+        public int find(int x) {
+            if ( x != root[x]) {
+                root[x] = find(root[x]);
+            }
+            return root[x];
+        }
+        
+        public boolean union(int a , int b) {
+            int rootA = find(a);
+            int rootB = find(b);
+            
+            if (rootA == rootB) {
+                return false;
+            }
+            
+            if (rank[rootA] > rank[rootB]) {
+                root[rootB] = rootA;
+            } else if (rank[rootA] < rank[rootB]) {
+                root[rootA] = rootB;
+            } else {
+                root[rootB] = rootA;
+                rank[rootA] += 1;
+            }
+            count--;
+            return true;
+        }
+        
+        int getNoOfComponents() {
+            return count;
+        }
+    }
+    public int earliestAcq(int[][] logs, int n) {
+        Arrays.sort(logs, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] a, int[] b) {
+                Integer time1 = new Integer(a[0]);
+                Integer time2 = new Integer(b[0]);
+                return time1.compareTo(time2);
+            }
+        });
+        UnionFind uf = new UnionFind(n);
+        for(int i = 0; i < logs.length; i++) {
+            if(uf.union(logs[i][1], logs[i][2]) && uf.getNoOfComponents() == 1) {
+                return logs[i][0];
+            }
+        }
+        return -1;
+    }
+}
