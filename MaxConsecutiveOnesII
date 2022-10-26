@@ -1,0 +1,27 @@
+class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int maxConsecutiveOnes = 0;
+        int i = 0;
+        int flipIndex = -1;
+        boolean isFlipped = false;
+        int consecutiveOnes = 0;
+        while(i < nums.length) {
+            if(nums[i] == 0) {
+               if (!isFlipped) {
+                    isFlipped = true;
+                    flipIndex = i;
+                    consecutiveOnes++;
+                } else {
+                   maxConsecutiveOnes = Math.max(maxConsecutiveOnes, consecutiveOnes);
+                   consecutiveOnes = i - flipIndex;
+                   flipIndex = i;
+               }
+            } else {
+                consecutiveOnes++;
+            }
+            i++;
+        }
+        maxConsecutiveOnes = Math.max(maxConsecutiveOnes, consecutiveOnes);
+        return maxConsecutiveOnes;
+    }
+}
